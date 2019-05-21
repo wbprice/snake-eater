@@ -76,7 +76,7 @@ fn initialize_snake(world: &mut World, sprite_sheet_handle: SpriteSheetHandle) {
     world
         .create_entity()
         .with(sprite_render)
-        .with(Snake::new([1.0, 1.0]))
+        .with(Snake::new([50.0, 50.0]))
         .with(local_transform)
         .build();
 }
@@ -128,6 +128,7 @@ impl Component for BigBoss {
     type Storage = DenseVecStorage<Self>;
 }
 
+#[derive(Debug)]
 pub struct Snake {
     pub width: f32,
     pub height: f32,
