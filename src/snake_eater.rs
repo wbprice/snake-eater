@@ -6,6 +6,10 @@ use amethyst::renderer::{
     Camera, PngFormat, Projection, SpriteRender, SpriteSheet,
     SpriteSheetFormat, SpriteSheetHandle, Texture, TextureMetadata,
 };
+use amethyst::{
+    ecs::prelude::Entity,
+    ui::{Anchor, TtfFormat, UiText, UiTransform}
+};
 
 pub const ARENA_HEIGHT: f32 = 480.0;
 pub const ARENA_WIDTH: f32 = 480.0;
@@ -22,6 +26,7 @@ impl SimpleState for SnakeEater {
 
             world.register::<Snake>(); // <- add this line temporarily
 
+            initialise_scoreboard(world);
             initialise_camera(world);
             initialise_big_boss(world, sprite_sheet_handle.clone());
             initialize_snake(world, sprite_sheet_handle);
@@ -79,6 +84,33 @@ fn initialize_snake(world: &mut World, sprite_sheet_handle: SpriteSheetHandle) {
         .with(Snake::new([50.0, 50.0]))
         .with(local_transform)
         .build();
+}
+
+fn initialise_scoreboard(world: &mut World) {
+    let font = world.read_resource::<Loader>().load(
+        "font/square.ttf",
+        TtfFormat,
+        Default::default(),
+        (),
+        &world.read_resource(),
+    );
+
+    let health_transform = UiTransform::new(
+        "HEALTH".to_string(), Anchor::TopMiddle,
+        -50., -50., 1., 200., 50., 0,
+    );
+
+    let health_score = world
+        .create_entity()
+        .with(health_transform)
+        .with(UiText::new(
+            font.clone(),
+            "0".to_string(),
+            [1., 1., 1., 1.],
+            50.,
+        )).build();
+
+    world.add_resource(ScoreText { health_score });
 }
 
 fn load_sprite_sheet(world: &mut World) -> SpriteSheetHandle {
@@ -149,4 +181,13 @@ impl Snake {
 
 impl Component for Snake {
     type Storage = DenseVecStorage<Self>;
+}
+
+#[derive(Default)]
+pub struct Scoreboard {
+    pub health: i32
+}
+
+pub struct ScoreText {
+    pub health_score: Entity
 }
