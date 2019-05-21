@@ -52,7 +52,7 @@ impl<'s> System<'s> for EatSnakesSystem {
 
                     let coordinates = get_random_place();
                     dbg!(coordinates);
-                    transform.set_xyz(coordinates[0], coordinates[1], coordinates[2]);
+                    // transform.set_xyz(coordinates[0], coordinates[1], coordinates[2]);
                 }
             }
         }
