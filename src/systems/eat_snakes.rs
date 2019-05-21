@@ -2,6 +2,7 @@ use amethyst::{
     core::transform::Transform,
     ecs::prelude::{Join, ReadStorage, System, WriteStorage},
 };
+use rand::Rng;
 
 use crate::snake_eater::{Snake, BigBoss, ARENA_HEIGHT, ARENA_WIDTH};
 
@@ -48,6 +49,10 @@ impl<'s> System<'s> for EatSnakesSystem {
                     big_boss_y + big_boss.height + snake.height / 2.0
                 ) {
                     println!("should eat snake!");
+
+                    let coordinates = get_random_place();
+                    dbg!(coordinates);
+                    transform.set_xyz(coordinates[0], coordinates[1], coordinates[2]);
                 }
             }
         }
@@ -57,4 +62,13 @@ impl<'s> System<'s> for EatSnakesSystem {
 
 fn is_point_in_rect(x: f32, y: f32, left: f32, bottom: f32, right: f32, top: f32) -> bool {
     x >= left && x <= right && y >= bottom && y <= top
+}
+
+fn get_random_place() -> [f32; 3] {
+    let mut rng = rand::thread_rng();
+    [
+        rng.gen_range(0.0, ARENA_WIDTH),
+        rng.gen_range(0.0, ARENA_HEIGHT),
+        0.0
+    ]
 }
