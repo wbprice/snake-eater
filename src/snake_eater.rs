@@ -17,13 +17,14 @@ pub struct SnakeEater;
 impl SimpleState for SnakeEater {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
             let world = data.world;
-            world.register::<BigBoss>();
-
             // Load the spritesheet necessary to render the graphics.
             let sprite_sheet_handle = load_sprite_sheet(world);
 
+            world.register::<Snake>(); // <- add this line temporarily
+
             initialise_camera(world);
-            initialise_big_boss(world, sprite_sheet_handle);
+            initialise_big_boss(world, sprite_sheet_handle.clone());
+            initialize_snake(world, sprite_sheet_handle);
     }
 }
 
@@ -59,6 +60,24 @@ fn initialise_big_boss(world: &mut World, sprite_sheet: SpriteSheetHandle) {
         .with(BigBoss::new())
         .with(sprite_render.clone())
         .with(big_boss_transform)
+        .build();
+}
+
+fn initialize_snake(world: &mut World, sprite_sheet_handle: SpriteSheetHandle) {
+    let mut local_transform = Transform::default();
+    local_transform.set_xyz(ARENA_WIDTH / 2.0, ARENA_WIDTH / 2.0, 0.0);
+
+    // Assign the sprite for the ball
+    let sprite_render = SpriteRender {
+        sprite_sheet: sprite_sheet_handle,
+        sprite_number: 1, // ball is the second sprite on the sprite sheet
+    };
+
+    world
+        .create_entity()
+        .with(sprite_render)
+        .with(Snake::new([1.0, 1.0]))
+        .with(local_transform)
         .build();
 }
 
@@ -109,3 +128,24 @@ impl Component for BigBoss {
     type Storage = DenseVecStorage<Self>;
 }
 
+pub struct Snake {
+    width: f32,
+    height: f32,
+    health: f32,
+    pub velocity: [f32; 2],
+}
+
+impl Snake {
+    fn new(velocity: [f32; 2]) -> Snake {
+        Snake {
+            width: 32.0,
+            height: 32.0,
+            health: 1.0,
+            velocity,
+        }
+    }
+}
+
+impl Component for Snake {
+    type Storage = DenseVecStorage<Self>;
+}
