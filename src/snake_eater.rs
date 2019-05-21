@@ -9,8 +9,8 @@ use amethyst::renderer::{
 
 pub const ARENA_HEIGHT: f32 = 480.0;
 pub const ARENA_WIDTH: f32 = 480.0;
-const BIG_BOSS_HEIGHT: f32 = 32.0;
-const BIG_BOSS_WIDTH: f32 = 64.0;
+pub const BIG_BOSS_HEIGHT: f32 = 32.0;
+pub const BIG_BOSS_WIDTH: f32 = 64.0;
 
 pub struct SnakeEater;
 
