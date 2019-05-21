@@ -109,9 +109,9 @@ fn load_sprite_sheet(world: &mut World) -> SpriteSheetHandle {
 }
 
 pub struct BigBoss {
-    width: f32,
-    height: f32,
-    health: f32
+    pub width: f32,
+    pub height: f32,
+    pub health: f32
 }
 
 impl BigBoss {
@@ -129,9 +129,9 @@ impl Component for BigBoss {
 }
 
 pub struct Snake {
-    width: f32,
-    height: f32,
-    health: f32,
+    pub width: f32,
+    pub height: f32,
+    pub health: f32,
     pub velocity: [f32; 2],
 }
 

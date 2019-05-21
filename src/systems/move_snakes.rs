@@ -4,16 +4,16 @@ use amethyst::{
     ecs::prelude::{Join, Read, ReadStorage, System, WriteStorage},
 };
 
-use SnakeEater::Snake;
+use crate::snake_eater::Snake;
 
 pub struct MoveSnakesSystem;
 
 impl<'s> System<'s> for MoveSnakesSystem {
-    type SystemData = {
+    type SystemData = (
         ReadStorage<'s, Snake>,
         WriteStorage<'s, Transform>,
         Read<'s, Time>
-    }
+    );
 
     fn run(&mut self, (snakes, mut locals, time): Self::SystemData) {
         for (snake, local) in (&snakes, &mut locals).join() {

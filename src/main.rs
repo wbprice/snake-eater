@@ -38,8 +38,9 @@ fn main() -> amethyst::Result<()> {
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
-        .with(systems::BigBossSystem, "big_boss_system", &["input_system"]);
-
+        .with(systems::BigBossSystem, "big_boss_system", &["input_system"])
+        .with(systems::MoveSnakesSystem, "move_snakes_system", &[])
+        .with(systems::EatSnakesSystem, "eat_snakes_system", &["big_boss_system", "move_snakes_system"]);
 
     let mut game = Application::new("./", SnakeEater, game_data)?;
 
