@@ -2,6 +2,7 @@ use amethyst::prelude::*;
 use amethyst::renderer::{DisplayConfig, DrawFlat2D, Pipeline,
                          RenderBundle, Stage};
 use amethyst::utils::application_root_dir;
+use amethyst::core::transform::TransformBundle;
 
 mod snake_eater;
 
@@ -24,7 +25,8 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(
         RenderBundle::new(pipe, Some(config))
             .with_sprite_sheet_processor()
-        )?;
+        )?
+        .with_bundle(TransformBundle::new())?;
 
     let mut game = Application::new("./", SnakeEater, game_data)?;
 
