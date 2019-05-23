@@ -16,7 +16,7 @@ impl<'s> System<'s> for EatSnakesSystem {
     );
 
     fn run(&mut self, (big_bosses, snakes, mut transforms): Self::SystemData) {
-        // Check for snake collisions
+        // Get position of Big Boss
         let (mut big_boss_x, mut big_boss_y, mut big_boss_height, mut big_boss_width) = (0.0, 0.0, 0.0, 0.0);
         for (big_boss, transform) in (&big_bosses, &transforms).join() {
             big_boss_x = transform.translation().x;
@@ -25,6 +25,7 @@ impl<'s> System<'s> for EatSnakesSystem {
             big_boss_height = big_boss.height;
         }
 
+        // Get position of each snake so we can check for collisions
         for (snake, transform) in (&snakes, &mut transforms).join() {
             let snake_x = transform.translation().x;
             let snake_y = transform.translation().y;
