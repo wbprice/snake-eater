@@ -25,10 +25,8 @@ impl<'s> System<'s> for BigBossSystem {
             if let Some(mv_amount) = x_mov {
                 let scaled_amount = 2.0 * mv_amount as f32;
                 // Prevent the player from walking off the left and right of the screen.
-                if scaled_amount > 0.0 && big_boss_x <= ARENA_WIDTH - big_boss.width / 2.0 {
-                    transform.translate_x(scaled_amount);
-                }
-                else if scaled_amount < 0.0 && big_boss_x >= 0.0 + big_boss.width / 2.0 {
+                if (scaled_amount > 0.0 && big_boss_x <= ARENA_WIDTH - big_boss.width / 2.0) ||
+                   (scaled_amount < 0.0 && big_boss_x >= 0.0 + big_boss.width / 2.0) {
                     transform.translate_x(scaled_amount);
                 }
             }
@@ -36,10 +34,8 @@ impl<'s> System<'s> for BigBossSystem {
             if let Some(mv_amount) = y_mov {
                 let scaled_amount = 2.0 * mv_amount as f32;
                 // Prevent the player from walking off the top or the bottom of the screen.
-                if scaled_amount > 0.0 && big_boss_y <= ARENA_HEIGHT - big_boss.height / 2.0 {
-                    transform.translate_y(scaled_amount);
-                }
-                else if scaled_amount < 0.0 && big_boss_y > 0.0 + big_boss.height / 2.0 {
+                if (scaled_amount > 0.0 && big_boss_y <= ARENA_HEIGHT - big_boss.height / 2.0) ||
+                   (scaled_amount < 0.0 && big_boss_y > 0.0 + big_boss.height / 2.0) {
                     transform.translate_y(scaled_amount);
                 }
             }
