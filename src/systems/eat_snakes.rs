@@ -10,50 +10,37 @@ pub struct EatSnakesSystem;
 
 impl<'s> System<'s> for EatSnakesSystem {
     type SystemData = (
-        WriteStorage<'s, Snake>,
         ReadStorage<'s, BigBoss>,
-        ReadStorage<'s, Transform>,
+        ReadStorage<'s, Snake>,
+        WriteStorage<'s, Transform>,
     );
 
-    fn run(&mut self, (mut snakes, big_boss, transforms): Self::SystemData) {
+    fn run(&mut self, (big_bosses, snakes, mut transforms): Self::SystemData) {
         // Check for snake collisions
-        for (snake, transform) in (&mut snakes, &transforms).join() {
+        let (mut big_boss_x, mut big_boss_y, mut big_boss_height, mut big_boss_width) = (0.0, 0.0, 0.0, 0.0);
+        for (big_boss, transform) in (&big_bosses, &transforms).join() {
+            big_boss_x = transform.translation().x;
+            big_boss_y = transform.translation().y;
+            big_boss_width = big_boss.width;
+            big_boss_height = big_boss.height;
+        }
+
+        for (snake, transform) in (&snakes, &mut transforms).join() {
             let snake_x = transform.translation().x;
             let snake_y = transform.translation().y;
 
-            // Bounce at the top and the bottom
-            if snake_y >= ARENA_HEIGHT - snake.height / 2.0 && snake.velocity[1] > 0.0 {
-                snake.velocity[1] = -snake.velocity[1];
-            } else if snake_y <= snake.height / 2.0 && snake.velocity[1] < 0.0 {
-                snake.velocity[1] = -snake.velocity[1];
-            }
-
-            // Bounce at the left and right
-            if snake_x >= ARENA_WIDTH - snake.width / 2.0 && snake.velocity[0] > 0.0 {
-                snake.velocity[0] = -snake.velocity[0];
-            } else if snake_x <= snake.width / 2.0 && snake.velocity[0] < 0.0 {
-                snake.velocity[0] = -snake.velocity[0];
-            }
-
-            // Check if was eaten
-            for (big_boss, big_boss_transform) in (&big_boss, &transforms).join() {
-                let big_boss_x = big_boss_transform.translation().x - big_boss.width * 0.5;
-                let big_boss_y = big_boss_transform.translation().y - big_boss.height * 0.5;
-
-                if is_point_in_rect(
-                    snake_x,
-                    snake_y,
-                    big_boss_x - snake.width / 2.0,
-                    big_boss_y - snake.height / 2.0,
-                    big_boss_x + big_boss.width + snake.width / 2.0,
-                    big_boss_y + big_boss.height + snake.height / 2.0
-                ) {
-                    println!("should eat snake!");
-
-                    let coordinates = get_random_place();
-                    dbg!(coordinates);
-                    // transform.set_xyz(coordinates[0], coordinates[1], coordinates[2]);
-                }
+            if is_point_in_rect(
+                snake_x,
+                snake_y,
+                big_boss_x - snake.width / 2.0,
+                big_boss_y - snake.height / 2.0,
+                big_boss_x + big_boss_width + snake.width / 2.0,
+                big_boss_y + big_boss_height + snake.height / 2.0
+            ) {
+                println!("should eat snake!");
+                let coordinates = get_random_place();
+                dbg!(coordinates);
+                transform.set_xyz(coordinates[0], coordinates[1], coordinates[2]);
             }
         }
     }
