@@ -41,7 +41,7 @@ fn main() -> amethyst::Result<()> {
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
-        .with_bundle(UiBundle::<String, String>::new())? // <-- Add me
+        .with_bundle(UiBundle::<String, String>::new())?
         .with(systems::BigBossSystem, "big_boss_system", &["input_system"])
         .with(systems::MoveSnakesSystem, "move_snakes_system", &[])
         .with(systems::EatSnakesSystem, "eat_snakes_system", &["big_boss_system", "move_snakes_system"]);
