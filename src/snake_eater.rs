@@ -123,15 +123,15 @@ fn initialize_healthbar(world: &mut World) {
         &world.read_resource(),
     );
 
-    let healthbar_transform = UiTransform::new(
+    let label_transform = UiTransform::new(
         "LIFE".to_string(),
         Anchor::TopLeft,
         48., -48., 1., 200., 50., 24
     );
 
-    let healthbar = world
+    let label = world
         .create_entity()
-        .with(healthbar_transform)
+        .with(label_transform)
         .with(UiText::new(
             font.clone(),
             "LIFE".to_string(),
@@ -139,7 +139,23 @@ fn initialize_healthbar(world: &mut World) {
             24.
         )).build();
 
-    world.add_resource(Healthbar { healthbar })
+    let healthbar_transform = UiTransform::new(
+        "LIFE".to_string(),
+        Anchor::TopLeft,
+        96., -48., 1., 200., 50., 24
+    );
+
+    let healthbar = world
+        .create_entity()
+        .with(healthbar_transform)
+        .with(UiText::new(
+            font.clone(),
+            "BAR".to_string(),
+            [1., 1., 1., 1.],
+            24.
+        )).build();
+
+    world.add_resource(Healthbar { label, healthbar })
 }
 
 fn load_sprite_sheet(world: &mut World) -> SpriteSheetHandle {
@@ -222,5 +238,6 @@ pub struct ScoreText {
 }
 
 pub struct Healthbar {
-    pub healthbar: Entity
+    pub healthbar: Entity,
+    pub label: Entity
 }
