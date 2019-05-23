@@ -22,51 +22,25 @@ impl<'s> System<'s> for BigBossSystem {
             let big_boss_x = transform.translation().x;
             let big_boss_y = transform.translation().y;
 
-            dbg!(big_boss_x);
-            dbg!(big_boss_y);
-
-            // // Prevent player from walking off the top of the screen
-            // if big_boss_y >= ARENA_HEIGHT - big_boss.height / 2.0 && y_mov > 0.0 {
-            //     continue;
-            // }
-
-            // // Prevent player from walking off the bottom of the screen
-            // if big_boss_y < big_boss.height / 2.0 && y_mov < 0.0 {
-            //     continue;
-            // }
-
-            // // Prevent player from walking off the left or right of the screen
-            // if big_boss_x >= ARENA_WIDTH - big_boss.width / 2.0 || big_boss_x < big_boss.width / 2.0 {
-            //     continue;
-            // }
-
             if let Some(mv_amount) = x_mov {
                 let scaled_amount = 2.0 * mv_amount as f32;
                 // Prevent the player from walking off the left and right of the screen.
-                if scaled_amount > 0.0 {
-                    if big_boss_x <= ARENA_WIDTH - big_boss.width / 2.0 {
-                        transform.translate_x(scaled_amount);
-                    }
+                if scaled_amount > 0.0 && big_boss_x <= ARENA_WIDTH - big_boss.width / 2.0 {
+                    transform.translate_x(scaled_amount);
                 }
-                else if scaled_amount < 0.0 {
-                    if big_boss_x >= 0.0 + big_boss.width / 2.0 {
-                        transform.translate_x(scaled_amount);
-                    }
+                else if scaled_amount < 0.0 && big_boss_x >= 0.0 + big_boss.width / 2.0 {
+                    transform.translate_x(scaled_amount);
                 }
             }
 
             if let Some(mv_amount) = y_mov {
                 let scaled_amount = 2.0 * mv_amount as f32;
                 // Prevent the player from walking off the top or the bottom of the screen.
-                if scaled_amount > 0.0 {
-                    if big_boss_y <= ARENA_HEIGHT - big_boss.height / 2.0 {
-                        transform.translate_y(scaled_amount);
-                    }
+                if scaled_amount > 0.0 && big_boss_y <= ARENA_HEIGHT - big_boss.height / 2.0 {
+                    transform.translate_y(scaled_amount);
                 }
-                else if scaled_amount < 0.0 {
-                    if big_boss_y > 0.0 + big_boss.height / 2.0 {
-                        transform.translate_y(scaled_amount);
-                    }
+                else if scaled_amount < 0.0 && big_boss_y > 0.0 + big_boss.height / 2.0 {
+                    transform.translate_y(scaled_amount);
                 }
             }
         }
