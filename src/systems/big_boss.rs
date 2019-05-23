@@ -15,19 +15,17 @@ impl<'s> System<'s> for BigBossSystem {
     );
 
     fn run(&mut self, (mut transforms, big_bosses, input): Self::SystemData) {
-        for (big_boss, transform) in (&big_bosses, &mut transforms).join() {
+        for (_big_boss, transform) in (&big_bosses, &mut transforms).join() {
             let x_mov = input.axis_value("horizontal");
             let y_mov = input.axis_value("vertical");
 
             if let Some(mv_amount) = x_mov {
-                println!("horizontal moving {}", mv_amount);
-                let scaled_amount = 1.2 * mv_amount as f32;
+                let scaled_amount = 2.0 * mv_amount as f32;
                 transform.translate_x(scaled_amount);
             }
 
             if let Some(mv_amount) = y_mov {
-                println!("vertical moving {}", mv_amount);
-                let scaled_amount = 1.2 * mv_amount as f32;
+                let scaled_amount = 2.0 * mv_amount as f32;
                 transform.translate_y(scaled_amount);
             }
         }
