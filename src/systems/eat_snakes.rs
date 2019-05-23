@@ -1,10 +1,11 @@
 use amethyst::{
     core::transform::Transform,
-    ecs::prelude::{Join, ReadStorage, System, WriteStorage},
+    ecs::prelude::{Join, Write, ReadExpect, ReadStorage, System, WriteStorage},
+    ui::UiText
 };
 use rand::Rng;
 
-use crate::snake_eater::{Snake, BigBoss, ARENA_HEIGHT, ARENA_WIDTH};
+use crate::snake_eater::{Snake, BigBoss, ARENA_HEIGHT, ARENA_WIDTH, ScoreText, Scoreboard};
 
 pub struct EatSnakesSystem;
 
@@ -13,9 +14,12 @@ impl<'s> System<'s> for EatSnakesSystem {
         ReadStorage<'s, BigBoss>,
         ReadStorage<'s, Snake>,
         WriteStorage<'s, Transform>,
+        WriteStorage<'s, UiText>,
+        Write<'s, Scoreboard>,
+        ReadExpect<'s, ScoreText>,
     );
 
-    fn run(&mut self, (big_bosses, snakes, mut transforms): Self::SystemData) {
+    fn run(&mut self, (big_bosses, snakes, mut transforms, mut ui_text, mut scores, score_text): Self::SystemData) {
         // Get position of Big Boss
         let (mut big_boss_x, mut big_boss_y, mut big_boss_height, mut big_boss_width) = (0.0, 0.0, 0.0, 0.0);
         for (big_boss, transform) in (&big_bosses, &transforms).join() {
@@ -38,10 +42,14 @@ impl<'s> System<'s> for EatSnakesSystem {
                 big_boss_x + big_boss_width + snake.width / 2.0,
                 big_boss_y + big_boss_height + snake.height / 2.0
             ) {
-                println!("should eat snake!");
                 let coordinates = get_random_place();
-                dbg!(coordinates);
                 transform.set_xyz(coordinates[0], coordinates[1], coordinates[2]);
+                // update health text
+                scores.health = (scores.health + 1).min(999);
+                // update score
+                if let Some(text) = ui_text.get_mut(score_text.health_score) {
+                    text.text = scores.health.to_string();
+                }
             }
         }
     }
