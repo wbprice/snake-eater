@@ -27,6 +27,7 @@ impl SimpleState for SnakeEater {
             world.register::<Snake>(); // <- add this line temporarily
 
             initialise_scoreboard(world);
+            initialize_healthbar(world);
             initialise_camera(world);
             initialise_big_boss(world, sprite_sheet_handle.clone());
             initialize_snake(world, sprite_sheet_handle);
@@ -96,7 +97,7 @@ fn initialise_scoreboard(world: &mut World) {
     );
 
     let health_transform = UiTransform::new(
-        "HEALTH".to_string(), Anchor::TopMiddle,
+        "HEALTH".to_string(), Anchor::BottomLeft,
         -50., -50., 1., 200., 50., 0,
     );
 
@@ -111,6 +112,34 @@ fn initialise_scoreboard(world: &mut World) {
         )).build();
 
     world.add_resource(ScoreText { health_score });
+}
+
+fn initialize_healthbar(world: &mut World) {
+    let font = world.read_resource::<Loader>().load(
+        "font/square.ttf",
+        TtfFormat,
+        Default::default(),
+        (),
+        &world.read_resource(),
+    );
+
+    let healthbar_transform = UiTransform::new(
+        "LIFE".to_string(),
+        Anchor::TopLeft,
+        48., -48., 1., 200., 50., 24
+    );
+
+    let healthbar = world
+        .create_entity()
+        .with(healthbar_transform)
+        .with(UiText::new(
+            font.clone(),
+            "LIFE".to_string(),
+            [1., 1., 1., 1.],
+            24.
+        )).build();
+
+    world.add_resource(Healthbar { healthbar })
 }
 
 fn load_sprite_sheet(world: &mut World) -> SpriteSheetHandle {
@@ -190,4 +219,8 @@ pub struct Scoreboard {
 
 pub struct ScoreText {
     pub health_score: Entity
+}
+
+pub struct Healthbar {
+    pub healthbar: Entity
 }
